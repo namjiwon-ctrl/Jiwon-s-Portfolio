@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SourceLegend, SourceShareBar } from "@/components/news/source-share-bar";
+import { SourceLegend } from "@/components/news/source-share-bar";
+import { BarOnlyLegend, ShareChart } from "@/components/news/share-chart";
 import { averageShare, formatDate, getArticlesOfIssue, getIssues } from "@/lib/news";
 
 // 화면 1: 이슈 목록
@@ -14,7 +15,9 @@ export default function Home() {
         <p className="text-muted-foreground">
           같은 사건을 다룬 기사를 언론사별로 모아, 누구의 목소리를 담았는지 비교해 보세요.
         </p>
-        <SourceLegend />
+        <BarOnlyLegend>
+          <SourceLegend />
+        </BarOnlyLegend>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         {issues.map((issue) => {
@@ -31,7 +34,7 @@ export default function Home() {
                   <CardDescription>{issue.summary}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-3">
-                  <SourceShareBar share={averageShare(articles)} label="이 이슈 기사들의 평균 인용 출처" />
+                  <ShareChart share={averageShare(articles)} label="이 이슈 기사들의 평균 인용 출처" size={88} />
                   <span className="text-xs text-muted-foreground">기사 {articles.length}건</span>
                 </CardContent>
               </Card>

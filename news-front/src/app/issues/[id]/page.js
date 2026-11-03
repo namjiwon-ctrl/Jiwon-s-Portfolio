@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SourceLegend, SourceShareBar } from "@/components/news/source-share-bar";
+import { SourceLegend } from "@/components/news/source-share-bar";
+import { BarOnlyLegend, ShareChart } from "@/components/news/share-chart";
 import {
   averageShare,
   formatDate,
@@ -43,8 +44,10 @@ export default async function IssuePage({ params }) {
 
       <Card>
         <CardContent className="flex flex-col gap-3">
-          <SourceShareBar share={averageShare(articles)} label={`기사 ${articles.length}건의 평균 인용 출처`} height="h-4" />
-          <SourceLegend share={averageShare(articles)} />
+          <ShareChart share={averageShare(articles)} label={`기사 ${articles.length}건의 평균 인용 출처`} barHeight="h-4" size={120} />
+          <BarOnlyLegend>
+            <SourceLegend share={averageShare(articles)} />
+          </BarOnlyLegend>
         </CardContent>
       </Card>
 
@@ -58,7 +61,7 @@ export default async function IssuePage({ params }) {
                 <CardTitle className="leading-snug group-hover:underline">{article.title}</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
-                <SourceShareBar share={sourceShare(article)} label="인용 출처" />
+                <ShareChart share={sourceShare(article)} label="인용 출처" size={80} />
                 <span className="text-xs text-muted-foreground">
                   의견 문장 {Math.round(opinionRatio(article) * 100)}%
                 </span>

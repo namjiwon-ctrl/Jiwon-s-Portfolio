@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SourceLegend, SourceShareBar } from "@/components/news/source-share-bar";
+import { SourceLegend } from "@/components/news/source-share-bar";
+import { BarOnlyLegend, CompareCharts, ShareChart } from "@/components/news/share-chart";
 import {
   compareWithIssue,
   differentViewArticles,
@@ -69,9 +70,10 @@ export default async function ArticlePage({ params }) {
           <CardDescription>이 기사가 편향됐다고 판정하는 것이 아니라, 다른 기사와 무엇이 다른지 보여 줘요.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <SourceShareBar share={mine} label="이 기사의 인용 출처" height="h-4" />
-          <SourceShareBar share={avg} label="같은 이슈 다른 기사들의 평균" height="h-4" />
-          <SourceLegend />
+          <CompareCharts mine={mine} avg={avg} />
+          <BarOnlyLegend>
+            <SourceLegend />
+          </BarOnlyLegend>
           {notes.length > 0 && (
             <ul className="list-disc space-y-1 pl-5 text-sm">
               {notes.map((n) => (
@@ -157,7 +159,7 @@ export default async function ArticlePage({ params }) {
               <Link key={r.id} href={`/articles/${r.id}`} className="group flex flex-col gap-1.5 rounded-lg border p-3">
                 <span className="text-xs text-muted-foreground">{getOutlet(r.outletId)?.name}</span>
                 <span className="font-medium group-hover:underline">{r.title}</span>
-                <SourceShareBar share={compareWithIssue(r).mine} />
+                <ShareChart share={compareWithIssue(r).mine} size={72} />
               </Link>
             ))}
           </CardContent>
