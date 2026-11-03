@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SourceLegend } from "@/components/news/source-share-bar";
 import { BarOnlyLegend, CompareCharts, ShareChart } from "@/components/news/share-chart";
-import { clearHistory, loadSampleHistory, useReadingHistory } from "@/lib/reading-history";
-import { getOutlet, readingBias, sourceShare } from "@/lib/news";
+import { clearHistory, interestedIssueCounts, loadSampleHistory, readArticleIds, useReadingEvents } from "@/lib/reading-history";
+import { getArticle, getIssue, getOutlet, readingBias, sourceShare } from "@/lib/news";
 
 // "내 읽기 편향" 화면 내용 (브라우저 기록을 읽어야 해서 클라이언트에서 그림)
 export function MyBiasDashboard() {
-  const history = useReadingHistory();
-  const ids = history.map((r) => r.articleId);
+  const events = useReadingEvents();
+  const ids = readArticleIds(events); // 원문 보기를 누른 기사
+  const interests = interestedIssueCounts(events, (id) => getArticle(id)?.issueId);
   const { read, mine, all, lessHeard, recommendations, outletCounts } = readingBias(ids);
 
   const controls = (
@@ -19,7 +20,7 @@ export function MyBiasDashboard() {
       <Button variant="outline" size="sm" onClick={loadSampleHistory}>
         예시 기록 불러오기
       </Button>
-      {read.length > 0 && (
+      {events.length > 0 && (
         <Button variant="ghost" size="sm" onClick={clearHistory}>
           기록 지우기
         </Button>
@@ -27,20 +28,40 @@ export function MyBiasDashboard() {
     </div>
   );
 
+  const interestCard = interests.length > 0 && (
+    <Card>
+      <CardHeader>
+        <CardTitle>관심 있는 주제</CardTitle>
+        <CardDescription>분석 화면을 열어 본 기사의 이슈입니다.</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        {interests.map(({ issueId, count }) => (
+          <Link key={issueId} href={`/issues/${issueId}`} className="flex items-center justify-between gap-3 text-sm hover:underline">
+            <span>{getIssue(issueId)?.title}</span>
+            <span className="shrink-0 tabular-nums text-muted-foreground">기사 {count}건</span>
+          </Link>
+        ))}
+      </CardContent>
+    </Card>
+  );
+
   if (read.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>아직 읽은 기사가 없습니다</CardTitle>
-          <CardDescription>
-            <Link href="/" className="underline underline-offset-2">
-              이슈 목록
-            </Link>
-            에서 기사를 읽으면 여기에 기록됩니다. 시연할 때는 예시 기록을 불러올 수 있습니다.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>{controls}</CardContent>
-      </Card>
+      <div className="flex flex-col gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>아직 읽은 기사가 없습니다</CardTitle>
+            <CardDescription>
+              <Link href="/" className="underline underline-offset-2">
+                이슈 목록
+              </Link>
+              에서 기사를 고른 뒤 &lsquo;원문 보기&rsquo;를 누르면 읽은 기사로 기록됩니다. 시연할 때는 예시 기록을 불러올 수 있습니다.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>{controls}</CardContent>
+        </Card>
+        {interestCard}
+      </div>
     );
   }
 
@@ -49,7 +70,7 @@ export function MyBiasDashboard() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-sm text-muted-foreground">지금까지 읽은 기사 {read.length}건</span>
+        <span className="text-sm text-muted-foreground">원문을 열어 읽은 기사 {read.length}건</span>
         {controls}
       </div>
 
@@ -99,6 +120,8 @@ export function MyBiasDashboard() {
           )}
         </CardContent>
       </Card>
+
+      {interestCard}
 
       {/* 3. 자주 본 언론사 */}
       <Card>

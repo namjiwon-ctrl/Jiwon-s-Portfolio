@@ -23,22 +23,7 @@ export function generateStaticParams() {
   return data.articles.map((a) => ({ id: a.id }));
 }
 
-// 문장에 프레이밍 어휘(화면 표기: 평가가 담긴 표현)가 있으면 노란색으로 강조
-function highlightTerms(text, terms) {
-  if (terms.length === 0) return text;
-  const pattern = new RegExp(`(${terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g");
-  return text.split(pattern).map((part, i) =>
-    terms.includes(part) ? (
-      <mark key={i} className="rounded bg-amber-100 px-0.5 text-inherit">
-        {part}
-      </mark>
-    ) : (
-      part
-    )
-  );
-}
-
-// 화면 3: 기사 상세 (지표와 근거 문장)
+// 화면 3: 기사 상세 (지표만 보여 주고, 기사 문장은 보여 주지 않음 → 문장은 원문에서)
 export default async function ArticlePage({ params }) {
   const { id } = await params;
   const article = getArticle(id);
@@ -47,6 +32,14 @@ export default async function ArticlePage({ params }) {
   const outlet = getOutlet(article.outletId);
   const { mine, avg, notes } = compareWithIssue(article);
   const recommendations = differentViewArticles(article);
+  const framingTerms = [...new Set(article.framingTerms.map((f) => f.term))];
+  const quotedPeople = [
+    ...new Map(
+      article.sentences
+        .filter((s) => s.sourceType && s.sourceName)
+        .map((s) => [s.sourceName, { name: s.sourceName, sourceType: s.sourceType }]),
+    ).values(),
+  ];
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-10">
@@ -113,39 +106,42 @@ export default async function ArticlePage({ params }) {
         </Card>
       )}
 
-      {/* 문장별 근거 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>문장별로 보기</CardTitle>
-          <CardDescription>
-            왼쪽 색 막대는 인용 출처, <mark className="rounded bg-amber-100 px-0.5">노란색</mark>은 평가가 담긴 표현입니다.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          {article.sentences.map((s) => {
-            const terms = article.framingTerms.filter((f) => f.sentenceId === s.id).map((f) => f.term);
-            return (
-              <div
-                key={s.id}
-                className="flex flex-col gap-1.5 border-l-4 pl-3"
-                style={{ borderColor: s.sourceType ? sourceColor(s.sourceType) : "var(--border)" }}
-              >
-                <p className="leading-relaxed">{highlightTerms(s.text, terms)}</p>
+      {/* 평가가 담긴 표현과 인용한 사람 (기사 문장은 보여 주지 않음) */}
+      {(framingTerms.length > 0 || quotedPeople.length > 0) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>이 기사에서 찾은 것</CardTitle>
+            <CardDescription>기사 문장은 원문에서 확인할 수 있습니다.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            {framingTerms.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">평가가 담긴 표현</span>
                 <div className="flex flex-wrap gap-1.5">
-                  <Badge variant={s.type === "opinion" ? "default" : "secondary"}>
-                    {s.type === "opinion" ? "의견" : "사실"}
-                  </Badge>
-                  {s.sourceType && (
-                    <Badge variant="outline">
-                      {sourceLabel(s.sourceType)} · {s.sourceName}
-                    </Badge>
-                  )}
+                  {framingTerms.map((t) => (
+                    <mark key={t} className="rounded bg-amber-100 px-1.5 py-0.5 text-sm text-inherit">
+                      {t}
+                    </mark>
+                  ))}
                 </div>
               </div>
-            );
-          })}
-        </CardContent>
-      </Card>
+            )}
+            {quotedPeople.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">인용한 사람</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {quotedPeople.map((q) => (
+                    <Badge key={q.name} variant="outline" className="gap-1.5">
+                      <span className="size-2 rounded-full" style={{ backgroundColor: sourceColor(q.sourceType) }} />
+                      {sourceLabel(q.sourceType)} · {q.name}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* 반대 시각 기사 추천 */}
       {recommendations.length > 0 && (
