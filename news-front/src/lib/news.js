@@ -1,0 +1,98 @@
+// 뉴스 데이터를 읽고 화면에 필요한 숫자를 계산하는 함수 모음
+// 지금은 가짜 데이터(mock-news.json)를 읽고, 나중에 백엔드 API로 바꾸면 이 파일만 고치면 됩니다.
+import data from "@/data/mock-news.json";
+
+export const sourceTypes = data.sourceTypes;
+
+// 출처 유형별 색. 정치적 색 연상(빨강·파랑)을 피하려고 중립적인 색만 씁니다.
+const PALETTE = ["#0f766e", "#b45309", "#6d28d9", "#475569", "#be185d", "#4d7c0f"];
+export function sourceColor(sourceTypeId) {
+  const index = sourceTypes.findIndex((t) => t.id === sourceTypeId);
+  return PALETTE[index % PALETTE.length] ?? "#94a3b8";
+}
+export function sourceLabel(sourceTypeId) {
+  return sourceTypes.find((t) => t.id === sourceTypeId)?.label ?? "기타";
+}
+
+export function getOutlet(outletId) {
+  return data.outlets.find((o) => o.id === outletId);
+}
+
+export function getIssues() {
+  return data.issues;
+}
+
+export function getIssue(issueId) {
+  return data.issues.find((i) => i.id === issueId);
+}
+
+export function getArticle(articleId) {
+  return data.articles.find((a) => a.id === articleId);
+}
+
+export function getArticlesOfIssue(issueId) {
+  const issue = getIssue(issueId);
+  if (!issue) return [];
+  return issue.articleIds.map(getArticle).filter(Boolean);
+}
+
+// 기사 한 건의 인용 출처 비중: 출처가 있는 문장 중 각 유형이 차지하는 비율 (0~1)
+export function sourceShare(article) {
+  const quoted = article.sentences.filter((s) => s.sourceType);
+  const share = Object.fromEntries(sourceTypes.map((t) => [t.id, 0]));
+  if (quoted.length === 0) return share;
+  for (const s of quoted) share[s.sourceType] = (share[s.sourceType] ?? 0) + 1;
+  for (const id of Object.keys(share)) share[id] = share[id] / quoted.length;
+  return share;
+}
+
+// 여러 기사의 인용 출처 비중 평균 (이슈 평균, 내 읽기 편향에 사용)
+export function averageShare(articles) {
+  const avg = Object.fromEntries(sourceTypes.map((t) => [t.id, 0]));
+  if (articles.length === 0) return avg;
+  for (const a of articles) {
+    const share = sourceShare(a);
+    for (const id of Object.keys(avg)) avg[id] += share[id] / articles.length;
+  }
+  return avg;
+}
+
+// 기사에서 의견 문장이 차지하는 비율 (0~1)
+export function opinionRatio(article) {
+  if (article.sentences.length === 0) return 0;
+  return article.sentences.filter((s) => s.type === "opinion").length / article.sentences.length;
+}
+
+// 이슈 평균과 비교했을 때 차이가 큰 출처 유형 설명 (판정하지 않고 비교만)
+export function compareWithIssue(article) {
+  const others = getArticlesOfIssue(article.issueId).filter((a) => a.id !== article.id);
+  const mine = sourceShare(article);
+  const avg = averageShare(others);
+  const notes = [];
+  for (const t of sourceTypes) {
+    const diff = mine[t.id] - avg[t.id];
+    if (diff >= 0.2) notes.push(`${t.label} 인용 비중이 같은 이슈의 다른 기사보다 높아요`);
+    if (mine[t.id] === 0 && avg[t.id] > 0) notes.push(`${t.label} 인용이 없어요 (다른 기사에는 있어요)`);
+  }
+  return { mine, avg, notes };
+}
+
+// 반대 시각 추천: 같은 이슈에서 인용 출처 비중이 이 기사와 가장 다른 기사 순
+export function differentViewArticles(article, limit = 2) {
+  const mine = sourceShare(article);
+  return getArticlesOfIssue(article.issueId)
+    .filter((a) => a.id !== article.id)
+    .map((a) => {
+      const other = sourceShare(a);
+      const distance = sourceTypes.reduce((sum, t) => sum + Math.abs(mine[t.id] - other[t.id]), 0);
+      return { article: a, distance };
+    })
+    .sort((x, y) => y.distance - x.distance)
+    .slice(0, limit)
+    .map((x) => x.article);
+}
+
+export function formatDate(iso) {
+  const d = new Date(iso);
+  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+}

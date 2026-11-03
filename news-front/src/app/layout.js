@@ -1,4 +1,5 @@
 import "./globals.css";
+import { SiteHeader } from "@/components/news/site-header";
 
 // 브라우저 탭에 보이는 제목과 설명
 export const metadata = {
@@ -10,7 +11,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   );
 }

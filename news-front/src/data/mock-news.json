@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "note": "화면 개발용 가짜 데이터입니다. 이슈, 언론사, 인물, 기사 내용은 모두 지어낸 것입니다.",
+    "version": "0.1",
+    "generatedAt": "2026-11-03"
+  },
+  "sourceTypes": [
+    { "id": "gov", "label": "정부·여당" },
+    { "id": "opp", "label": "야당" },
+    { "id": "expert", "label": "전문가" },
+    { "id": "citizen", "label": "시민" }
+  ],
+  "outlets": [
+    { "id": "garam", "name": "가람일보" },
+    { "id": "narae", "name": "나래신문" },
+    { "id": "daon", "name": "다온뉴스" },
+    { "id": "raon", "name": "라온경제" },
+    { "id": "maru", "name": "마루방송" }
+  ],
+  "issues": [
+    {
+      "id": "issue-001",
+      "title": "가상시 청년 월세 지원 확대안",
+      "summary": "가상시가 청년 월세 지원 대상을 늘리는 조례 개정안을 발표했다. 재원 마련 방식과 지원 효과를 두고 의견이 갈린다.",
+      "category": "사회",
+      "date": "2026-11-03",
+      "articleIds": ["art-001", "art-002", "art-003", "art-004", "art-005"]
+    },
+    {
+      "id": "issue-002",
+      "title": "나래시 심야버스 노선 조정",
+      "summary": "나래시가 이용객이 적은 심야버스 노선을 줄이고 주요 노선의 배차를 늘리겠다고 밝혔다.",
+      "category": "사회",
+      "date": "2026-11-02",
+      "articleIds": ["art-006", "art-007", "art-008"]
+    }
+  ],
+  "articles": [
+    {
+      "id": "art-001",
+      "issueId": "issue-001",
+      "outletId": "garam",
+      "title": "가상시, 청년 월세 지원 2배로 늘린다",
+      "summary": "가상시가 청년 월세 지원 대상을 내년부터 두 배로 늘린다고 밝혔다.",
+      "url": "#",
+      "publishedAt": "2026-11-03T09:10:00+09:00",
+      "sentences": [
+        { "id": "s1", "text": "가상시는 3일 청년 월세 지원 대상을 내년부터 두 배로 늘리는 조례 개정안을 발표했다.", "type": "fact", "sourceType": "gov", "sourceName": "가상시" },
+        { "id": "s2", "text": "시 관계자는 \"주거비 부담이 큰 청년들에게 실질적인 도움이 될 것\"이라고 말했다.", "type": "fact", "sourceType": "gov", "sourceName": "시 관계자" },
+        { "id": "s3", "text": "여당 소속 김가상 시의원도 \"청년 정착을 위한 꼭 필요한 정책\"이라고 강조했다.", "type": "fact", "sourceType": "gov", "sourceName": "김가상 시의원(여당)" },
+        { "id": "s4", "text": "이번 확대로 지원을 받는 청년은 약 1만 명에 이를 전망이다.", "type": "fact", "sourceType": null, "sourceName": null },
+        { "id": "s5", "text": "청년 주거 문제 해결에 한 걸음 다가선 정책이라는 평가가 나온다.", "type": "opinion", "sourceType": null, "sourceName": null }
+      ],
+      "framingTerms": [
+        { "term": "실질적인 도움", "sentenceId": "s2" },
+        { "term": "한 걸음 다가선", "sentenceId": "s5" }
+      ],
+      "missingViewpoints": [
+        { "sourceType": "opp", "description": "재원 마련 방식에 대한 야당의 문제 제기가 없음", "foundInArticleIds": ["art-002", "art-004"] },
+        { "sourceType": "citizen", "description": "실제 청년 세입자의 목소리가 없음", "foundInArticleIds": ["art-003", "art-005"] }
+      ]
+    },
+    {
+      "id": "art-002",
+      "issueId": "issue-001",
+      "outletId": "narae",
+      "title": "청년 월세 지원 확대, 재원은 어디서?",
+      "summary": "가상시의 청년 월세 지원 확대안을 두고 재원 마련 방식에 대한 비판이 나온다.",
+      "url": "#",
+      "publishedAt": "2026-11-03T10:30:00+09:00",
+      "sentences": [
+        { "id": "s1", "text": "가상시가 청년 월세 지원 대상을 두 배로 늘리겠다고 밝혔다.", "type": "fact", "sourceType": "gov", "sourceName": "가상시" },
+        { "id": "s2", "text": "야당 소속 이나래 시의원은 \"다른 복지 예산을 줄여 메우는 것은 돌려막기\"라고 비판했다.", "type": "fact", "sourceType": "opp", "sourceName": "이나래 시의원(야당)" },
+        { "id": "s3", "text": "같은 당 박다온 시의원도 \"선거를 앞둔 생색내기\"라고 지적했다.", "type": "fact", "sourceType": "opp", "sourceName": "박다온 시의원(야당)" },
+        { "id": "s4", "text": "시는 구체적인 재원 계획을 아직 공개하지 않았다.", "type": "fact", "sourceType": null, "sourceName": null },
+        { "id": "s5", "text": "재원 대책 없이 지원만 늘리는 것은 무리한 결정이라는 지적이 많다.", "type": "opinion", "sourceType": null, "sourceName": null }
+      ],
+      "framingTerms": [
+        { "term": "돌려막기", "sentenceId": "s2" },
+        { "term": "생색내기", "sentenceId": "s3" },
+        { "term": "무리한 결정", "sentenceId": "s5" }
+      ],
+      "missingViewpoints": [
+        { "sourceType": "expert", "description": "지원 효과에 대한 전문가 분석이 없음", "foundInArticleIds": ["art-003", "art-004"] },
+        { "sourceType": "citizen", "description": "실제 청년 세입자의 목소리가 없음", "foundInArticleIds": ["art-003", "art-005"] }
+      ]
+    },
+    {
+      "id": "art-003",
+      "issueId": "issue-001",
+      "outletId": "daon",
+      "title": "\"월세 절반이 생활비\"… 청년들이 본 지원 확대",
+      "summary": "청년 세입자와 전문가들이 가상시의 월세 지원 확대안을 어떻게 보는지 들어 봤다.",
+      "url": "#",
+      "publishedAt": "2026-11-03T13:00:00+09:00",
+      "sentences": [
+        { "id": "s1", "text": "가상시에서 혼자 사는 대학생 최라온 씨는 \"월세가 생활비의 절반\"이라고 말했다.", "type": "fact", "sourceType": "citizen", "sourceName": "최라온 씨(대학생)" },
+        { "id": "s2", "text": "직장인 정마루 씨는 \"지원 기준이 까다로워 신청을 포기한 적이 있다\"고 했다.", "type": "fact", "sourceType": "citizen", "sourceName": "정마루 씨(직장인)" },
+        { "id": "s3", "text": "가상대 주거학과 한가람 교수는 \"지원 확대와 함께 신청 절차를 단순하게 바꿔야 효과가 난다\"고 분석했다.", "type": "fact", "sourceType": "expert", "sourceName": "한가람 교수(가상대)" },
+        { "id": "s4", "text": "시는 신청 절차 개선도 함께 검토하겠다고 밝혔다.", "type": "fact", "sourceType": "gov", "sourceName": "가상시" },
+        { "id": "s5", "text": "제도가 실제로 청년에게 닿을 수 있을지가 관건이다.", "type": "opinion", "sourceType": null, "sourceName": null }
+      ],
+      "framingTerms": [
+        { "term": "관건", "sentenceId": "s5" }
+      ],
+      "missingViewpoints": [
+        { "sourceType": "opp", "description": "재원 마련 방식에 대한 야당의 문제 제기가 없음", "foundInArticleIds": ["art-002", "art-004"] }
+      ]
+    },
+    {
+      "id": "art-004",
+      "issueId": "issue-001",
+      "outletId": "raon",
+      "title": "청년 월세 지원 확대에 연 120억 원… 시 예산 부담 커져",
+      "summary": "가상시의 청년 월세 지원 확대에 필요한 예산과 재정 영향을 짚었다.",
+      "url": "#",
+      "publishedAt": "2026-11-03T15:20:00+09:00",
+      "sentences": [
+        { "id": "s1", "text": "이번 확대안을 시행하려면 연간 약 120억 원이 더 필요하다.", "type": "fact", "sourceType": null, "sourceName": null },
+        { "id": "s2", "text": "가상시는 \"기존 사업을 조정해 재원을 마련하겠다\"고 밝혔다.", "type": "fact", "sourceType": "gov", "sourceName": "가상시" },
+        { "id": "s3", "text": "야당은 \"조정 대상 사업이 무엇인지 먼저 공개하라\"고 요구했다.", "type": "fact", "sourceType": "opp", "sourceName": "시의회 야당" },
+        { "id": "s4", "text": "재정학자 오나래 교수는 \"지원 효과를 측정할 지표를 함께 정해야 한다\"고 말했다.", "type": "fact", "sourceType": "expert", "sourceName": "오나래 교수" },
+        { "id": "s5", "text": "시 재정에 부담이 될 수 있다는 우려가 커지고 있다.", "type": "opinion", "sourceType": null, "sourceName": null }
+      ],
+      "framingTerms": [
+        { "term": "부담", "sentenceId": "s5" }
+      ],
+      "missingViewpoints": [
+        { "sourceType": "citizen", "description": "실제 청년 세입자의 목소리가 없음", "foundInArticleIds": ["art-003", "art-005"] }
+      ]
+    },
+    {
+      "id": "art-005",
+      "issueId": "issue-001",
+      "outletId": "maru",
+      "title": "청년 월세 지원 늘린다… 시민 반응은 엇갈려",
+      "summary": "가상시의 청년 월세 지원 확대 소식에 시민들의 반응이 엇갈린다.",
+      "url": "#",
+      "publishedAt": "2026-11-03T18:40:00+09:00",
+      "sentences": [
+        { "id": "s1", "text": "가상시가 청년 월세 지원 대상을 두 배로 늘리겠다고 발표했다.", "type": "fact", "sourceType": "gov", "sourceName": "가상시" },
+        { "id": "s2", "text": "사회초년생 윤다온 씨는 \"이제라도 지원이 늘어 다행\"이라고 말했다.", "type": "fact", "sourceType": "citizen", "sourceName": "윤다온 씨(사회초년생)" },
+        { "id": "s3", "text": "반면 50대 자영업자 강라온 씨는 \"다른 세대 지원도 함께 고민해야 한다\"고 했다.", "type": "fact", "sourceType": "citizen", "sourceName": "강라온 씨(자영업자)" },
+        { "id": "s4", "text": "시는 내년 상반기 중 신청을 받을 예정이다.", "type": "fact", "sourceType": "gov", "sourceName": "가상시" }
+      ],
+      "framingTerms": [],
+      "missingViewpoints": [
+        { "sourceType": "opp", "description": "재원 마련 방식에 대한 야당의 문제 제기가 없음", "foundInArticleIds": ["art-002", "art-004"] },
+        { "sourceType": "expert", "description": "지원 효과에 대한 전문가 분석이 없음", "foundInArticleIds": ["art-003", "art-004"] }
+      ]
+    },
+    {
+      "id": "art-006",
+      "issueId": "issue-002",
+      "outletId": "garam",
+      "title": "나래시, 심야버스 3개 노선 폐지… 주요 노선 배차는 늘려",
+      "summary": "나래시가 이용객이 적은 심야버스 노선을 정리하고 주요 노선을 강화한다.",
+      "url": "#",
+      "publishedAt": "2026-11-02T09:00:00+09:00",
+      "sentences": [
+        { "id": "s1", "text": "나래시는 이용객이 적은 심야버스 3개 노선을 다음 달 폐지한다고 밝혔다.", "type": "fact", "sourceType": "gov", "sourceName": "나래시" },
+        { "id": "s2", "text": "시 교통국장은 \"남는 차량을 주요 노선에 돌려 배차 간격을 줄이겠다\"고 말했다.", "type": "fact", "sourceType": "gov", "sourceName": "시 교통국장" },
+        { "id": "s3", "text": "효율적인 운영을 위한 합리적인 조정이라는 평가가 나온다.", "type": "opinion", "sourceType": null, "sourceName": null }
+      ],
+      "framingTerms": [
+        { "term": "합리적인 조정", "sentenceId": "s3" }
+      ],
+      "missingViewpoints": [
+        { "sourceType": "citizen", "description": "폐지 노선을 이용하던 시민의 목소리가 없음", "foundInArticleIds": ["art-007"] }
+      ]
+    },
+    {
+      "id": "art-007",
+      "issueId": "issue-002",
+      "outletId": "daon",
+      "title": "\"새벽 퇴근길 막막\"… 심야버스 폐지에 노동자들 한숨",
+      "summary": "심야버스 노선 폐지로 새벽에 퇴근하는 시민들의 불편이 예상된다.",
+      "url": "#",
+      "publishedAt": "2026-11-02T12:30:00+09:00",
+      "sentences": [
+        { "id": "s1", "text": "새벽 2시에 퇴근하는 간호조무사 서가람 씨는 \"택시비가 한 달에 20만 원 넘게 들 것\"이라고 걱정했다.", "type": "fact", "sourceType": "citizen", "sourceName": "서가람 씨(간호조무사)" },
+        { "id": "s2", "text": "야당 시의원은 \"교통 약자를 외면한 결정\"이라고 비판했다.", "type": "fact", "sourceType": "opp", "sourceName": "시의회 야당 의원" },
+        { "id": "s3", "text": "시는 대체 교통수단을 검토하겠다고 밝혔다.", "type": "fact", "sourceType": "gov", "sourceName": "나래시" }
+      ],
+      "framingTerms": [
+        { "term": "외면한", "sentenceId": "s2" }
+      ],
+      "missingViewpoints": [
+        { "sourceType": "expert", "description": "노선 이용률과 대안에 대한 전문가 분석이 없음", "foundInArticleIds": ["art-008"] }
+      ]
+    },
+    {
+      "id": "art-008",
+      "issueId": "issue-002",
+      "outletId": "raon",
+      "title": "심야버스 이용률 하위 3개 노선, 좌석 10%도 안 차",
+      "summary": "폐지 대상 심야버스 노선의 이용률과 운영 비용을 분석했다.",
+      "url": "#",
+      "publishedAt": "2026-11-02T16:10:00+09:00",
+      "sentences": [
+        { "id": "s1", "text": "폐지 대상 3개 노선의 평균 좌석 이용률은 10%에 못 미쳤다.", "type": "fact", "sourceType": null, "sourceName": null },
+        { "id": "s2", "text": "교통공학자 문다온 교수는 \"수요응답형 버스로 바꾸는 방안도 검토할 만하다\"고 말했다.", "type": "fact", "sourceType": "expert", "sourceName": "문다온 교수" },
+        { "id": "s3", "text": "시는 노선 조정으로 연간 15억 원을 아낄 수 있다고 밝혔다.", "type": "fact", "sourceType": "gov", "sourceName": "나래시" }
+      ],
+      "framingTerms": [],
+      "missingViewpoints": [
+        { "sourceType": "citizen", "description": "폐지 노선을 이용하던 시민의 목소리가 없음", "foundInArticleIds": ["art-007"] }
+      ]
+    }
+  ]
+}
