@@ -17,6 +17,7 @@ import {
 } from "@/lib/news";
 import data from "@/data/mock-news.json";
 import { RecordRead } from "@/components/news/record-read";
+import { OriginalLink } from "@/components/news/original-link";
 
 export function generateStaticParams() {
   return data.articles.map((a) => ({ id: a.id }));
@@ -60,9 +61,7 @@ export default async function ArticlePage({ params }) {
         </span>
         <h1 className="text-2xl font-bold leading-snug tracking-tight">{article.title}</h1>
         <p className="text-muted-foreground">{article.summary}</p>
-        <a href={article.url} className="text-sm underline underline-offset-4">
-          원문 보기
-        </a>
+        <OriginalLink articleId={article.id} url={article.url} outletName={outlet?.name} className="text-sm underline underline-offset-4" />
       </div>
 
       {/* 같은 이슈의 다른 기사와 비교 */}
