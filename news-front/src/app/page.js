@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SourceLegend } from "@/components/news/source-share-bar";
 import { BarOnlyLegend, ShareChart } from "@/components/news/share-chart";
+import { Intro } from "@/components/news/intro";
 import { averageShare, formatDate, getArticlesOfIssue, getIssues } from "@/lib/news";
 
 // 화면 1: 이슈 목록
@@ -10,11 +11,9 @@ export default function Home() {
   const issues = getIssues();
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10">
+      <Intro />
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold tracking-tight">오늘의 이슈</h1>
-        <p className="text-muted-foreground">
-          같은 사건을 다룬 기사를 언론사별로 모아, 각 기사가 누구의 목소리를 담았는지 비교합니다.
-        </p>
+        <h2 className="text-xl font-bold tracking-tight">오늘의 이슈</h2>
         <BarOnlyLegend>
           <SourceLegend />
         </BarOnlyLegend>

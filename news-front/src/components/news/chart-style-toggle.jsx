@@ -19,7 +19,7 @@ export function ChartStyleToggle() {
           onClick={() => setChartStyle(o.id)}
           aria-pressed={style === o.id}
           className={cn(
-            "rounded-md px-2.5 py-1 font-medium text-muted-foreground transition-colors",
+            "rounded-md px-3 py-1.5 font-medium sm:px-2.5 sm:py-1 text-muted-foreground transition-colors",
             style === o.id && "bg-background text-foreground shadow-sm"
           )}
         >
