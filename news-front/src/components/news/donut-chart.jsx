@@ -66,7 +66,7 @@ export function DonutChart({ share, label, size = 96, showLegend = true }) {
           </ul>
         )}
       </div>
-      {total === 0 && <span className="text-xs text-muted-foreground">인용된 출처가 없어요</span>}
+      {total === 0 && <span className="text-xs text-muted-foreground">인용된 출처가 없습니다</span>}
     </div>
   );
 }

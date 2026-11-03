@@ -69,7 +69,7 @@ export default async function IssuePage({ params }) {
                   <div className="flex flex-wrap gap-1.5">
                     {article.missingViewpoints.map((m) => (
                       <Badge key={m.sourceType} variant="outline">
-                        {sourceLabel(m.sourceType)} 관점 없음
+                        {sourceLabel(m.sourceType)} 인용 없음
                       </Badge>
                     ))}
                   </div>

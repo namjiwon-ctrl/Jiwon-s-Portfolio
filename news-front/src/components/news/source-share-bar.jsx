@@ -19,7 +19,7 @@ export function SourceShareBar({ share, label, showLegend = false, height = "h-3
             ) : null
           )}
       </div>
-      {total === 0 && <span className="text-xs text-muted-foreground">인용된 출처가 없어요</span>}
+      {total === 0 && <span className="text-xs text-muted-foreground">인용된 출처가 없습니다</span>}
       {showLegend && <SourceLegend share={share} />}
     </div>
   );

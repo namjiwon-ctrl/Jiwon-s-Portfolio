@@ -71,8 +71,8 @@ export function compareWithIssue(article) {
   const notes = [];
   for (const t of sourceTypes) {
     const diff = mine[t.id] - avg[t.id];
-    if (diff >= 0.2) notes.push(`${t.label} 인용 비중이 같은 이슈의 다른 기사보다 높아요`);
-    if (mine[t.id] === 0 && avg[t.id] > 0) notes.push(`${t.label} 인용이 없어요 (다른 기사에는 있어요)`);
+    if (diff >= 0.2) notes.push(`${t.label} 인용 비중이 같은 이슈의 다른 기사보다 높습니다`);
+    if (mine[t.id] === 0 && avg[t.id] > 0) notes.push(`${t.label} 인용 없음 (같은 이슈의 다른 기사에는 있습니다)`);
   }
   return { mine, avg, notes };
 }

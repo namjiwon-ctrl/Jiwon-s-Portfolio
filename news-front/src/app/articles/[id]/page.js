@@ -22,7 +22,7 @@ export function generateStaticParams() {
   return data.articles.map((a) => ({ id: a.id }));
 }
 
-// 문장에 프레이밍 어휘가 있으면 노란색으로 강조
+// 문장에 프레이밍 어휘(화면 표기: 평가가 담긴 표현)가 있으면 노란색으로 강조
 function highlightTerms(text, terms) {
   if (terms.length === 0) return text;
   const pattern = new RegExp(`(${terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g");
@@ -69,7 +69,7 @@ export default async function ArticlePage({ params }) {
       <Card>
         <CardHeader>
           <CardTitle>같은 이슈의 다른 기사와 비교하면</CardTitle>
-          <CardDescription>이 기사가 편향됐다고 판정하는 것이 아니라, 다른 기사와 무엇이 다른지 보여 줘요.</CardDescription>
+          <CardDescription>기사를 판정하지 않습니다. 같은 이슈를 다룬 다른 기사와 무엇이 다른지 보여 줍니다.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <CompareCharts mine={mine} avg={avg} />
@@ -87,18 +87,18 @@ export default async function ArticlePage({ params }) {
         </CardContent>
       </Card>
 
-      {/* 빠진 관점 */}
+      {/* 이 기사에 없는 인용 (빠진 관점) */}
       {article.missingViewpoints.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>이 기사에서 빠진 관점</CardTitle>
+            <CardTitle>이 기사에 없는 인용</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {article.missingViewpoints.map((m) => (
               <div key={m.sourceType} className="flex flex-col gap-1">
                 <span className="text-sm">{m.description}</span>
                 <span className="text-xs text-muted-foreground">
-                  이 관점이 담긴 기사:{" "}
+                  이 목소리가 담긴 기사:{" "}
                   {m.foundInArticleIds.map((aid, i) => (
                     <span key={aid}>
                       {i > 0 && ", "}
@@ -119,8 +119,7 @@ export default async function ArticlePage({ params }) {
         <CardHeader>
           <CardTitle>문장별로 보기</CardTitle>
           <CardDescription>
-            색 막대는 인용 출처, <mark className="rounded bg-amber-100 px-0.5">노란색 표현</mark>은 사건을 특정하게
-            표현한 단어예요.
+            왼쪽 색 막대는 인용 출처, <mark className="rounded bg-amber-100 px-0.5">노란색</mark>은 평가가 담긴 표현입니다.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
@@ -154,7 +153,7 @@ export default async function ArticlePage({ params }) {
         <Card>
           <CardHeader>
             <CardTitle>다른 시각의 기사</CardTitle>
-            <CardDescription>인용한 출처가 이 기사와 가장 다른 기사예요.</CardDescription>
+            <CardDescription>인용한 출처가 이 기사와 가장 다른 기사입니다.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {recommendations.map((r) => (

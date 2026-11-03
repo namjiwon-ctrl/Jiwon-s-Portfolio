@@ -13,7 +13,7 @@ export default function Home() {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold tracking-tight">오늘의 이슈</h1>
         <p className="text-muted-foreground">
-          같은 사건을 다룬 기사를 언론사별로 모아, 누구의 목소리를 담았는지 비교해 보세요.
+          같은 사건을 다룬 기사를 언론사별로 모아, 각 기사가 누구의 목소리를 담았는지 비교합니다.
         </p>
         <BarOnlyLegend>
           <SourceLegend />

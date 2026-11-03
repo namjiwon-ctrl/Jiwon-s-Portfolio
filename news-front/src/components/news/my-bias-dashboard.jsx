@@ -31,12 +31,12 @@ export function MyBiasDashboard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>아직 읽은 기사가 없어요</CardTitle>
+          <CardTitle>아직 읽은 기사가 없습니다</CardTitle>
           <CardDescription>
             <Link href="/" className="underline underline-offset-2">
               이슈 목록
             </Link>
-            에서 기사를 읽으면 여기에 쌓여요. 시연할 때는 예시 기록을 불러올 수 있어요.
+            에서 기사를 읽으면 여기에 기록됩니다. 시연할 때는 예시 기록을 불러올 수 있습니다.
           </CardDescription>
         </CardHeader>
         <CardContent>{controls}</CardContent>
@@ -57,7 +57,7 @@ export function MyBiasDashboard() {
       <Card>
         <CardHeader>
           <CardTitle>내가 접한 인용 출처</CardTitle>
-          <CardDescription>읽은 기사들에서 누구의 말을 많이 들었는지, 전체 기사 평균과 비교해요.</CardDescription>
+          <CardDescription>읽은 기사에서 누구의 말을 많이 접했는지 사이트 전체 기사 평균과 비교합니다.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <CompareCharts mine={mine} avg={all} mineLabel="내가 읽은 기사" avgLabel="사이트 전체 기사 평균" />
@@ -71,16 +71,16 @@ export function MyBiasDashboard() {
       <Card>
         <CardHeader>
           <CardTitle>덜 접한 목소리</CardTitle>
-          <CardDescription>전체 기사 평균보다 10%p 이상 적게 접한 출처예요.</CardDescription>
+          <CardDescription>사이트 전체 기사 평균보다 10%p 이상 적게 접한 출처입니다.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           {lessHeard.length === 0 ? (
-            <p className="text-sm">여러 목소리를 고르게 접하고 있어요.</p>
+            <p className="text-sm">여러 목소리를 고르게 접하고 있습니다.</p>
           ) : (
             <ul className="list-disc space-y-1 pl-5 text-sm">
               {lessHeard.map((t) => (
                 <li key={t.id}>
-                  <b>{t.label}</b>의 목소리를 전체 평균보다 {Math.round(-t.diff * 100)}%p 적게 접했어요
+                  <b>{t.label}</b>의 목소리를 전체 평균보다 {Math.round(-t.diff * 100)}%p 적게 접했습니다
                 </li>
               ))}
             </ul>
