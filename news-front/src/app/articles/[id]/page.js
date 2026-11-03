@@ -16,6 +16,7 @@ import {
   sourceLabel,
 } from "@/lib/news";
 import data from "@/data/mock-news.json";
+import { RecordRead } from "@/components/news/record-read";
 
 export function generateStaticParams() {
   return data.articles.map((a) => ({ id: a.id }));
@@ -48,6 +49,7 @@ export default async function ArticlePage({ params }) {
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-10">
+      <RecordRead articleId={article.id} />
       <Link href={`/issues/${issue.id}`} className="text-sm text-muted-foreground hover:underline">
         ← {issue.title}
       </Link>

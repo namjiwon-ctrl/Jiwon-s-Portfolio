@@ -10,7 +10,10 @@ export function SiteHeader() {
           뉴스 편향도 분석
         </Link>
         <div className="flex items-center gap-3">
-          <span className="hidden text-xs text-muted-foreground sm:inline">예시 데이터로 보는 화면이에요</span>
+          <span className="hidden text-xs text-muted-foreground md:inline">예시 데이터로 보는 화면이에요</span>
+          <Link href="/me" className="text-sm font-medium hover:underline">
+            내 읽기 편향
+          </Link>
           <ChartStyleToggle />
         </div>
       </div>

@@ -96,3 +96,35 @@ export function formatDate(iso) {
   const d = new Date(iso);
   return `${d.getMonth() + 1}월 ${d.getDate()}일`;
 }
+
+export function getAllArticles() {
+  return data.articles;
+}
+
+// 내 읽기 편향: 내가 읽은 기사들의 인용 출처 비중을 전체 기사 평균과 비교
+export function readingBias(readArticleIds) {
+  const read = readArticleIds.map(getArticle).filter(Boolean);
+  const mine = averageShare(read);
+  const all = averageShare(data.articles);
+  // 전체 평균보다 10%p 이상 적게 접한 출처 = 덜 접한 목소리
+  const lessHeard = sourceTypes
+    .map((t) => ({ ...t, diff: mine[t.id] - all[t.id] }))
+    .filter((t) => t.diff <= -0.1)
+    .sort((a, b) => a.diff - b.diff);
+  // 덜 접한 목소리가 많이 담긴, 아직 안 읽은 기사 추천
+  const unread = data.articles.filter((a) => !readArticleIds.includes(a.id));
+  const recommendations = lessHeard.length
+    ? unread
+        .map((a) => ({ article: a, score: lessHeard.reduce((sum, t) => sum + sourceShare(a)[t.id], 0) }))
+        .filter((x) => x.score > 0)
+        .sort((x, y) => y.score - x.score)
+        .slice(0, 3)
+        .map((x) => x.article)
+    : [];
+  // 자주 본 언론사
+  const outletCounts = data.outlets
+    .map((o) => ({ ...o, count: read.filter((a) => a.outletId === o.id).length }))
+    .filter((o) => o.count > 0)
+    .sort((a, b) => b.count - a.count);
+  return { read, mine, all, lessHeard, recommendations, outletCounts };
+}
