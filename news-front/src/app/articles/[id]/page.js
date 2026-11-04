@@ -32,6 +32,12 @@ export default async function ArticlePage({ params }) {
   const outlet = getOutlet(article.outletId);
   const { mine, avg, notes } = compareWithIssue(article);
   const recommendations = differentViewArticles(article);
+  // 의견 문장은 저작권을 고려해 최대 2개, 앞 40자까지만 짧게 인용 (출처: 언론사명 표시)
+  const QUOTE_MAX = 40;
+  const opinionQuotes = article.sentences
+    .filter((s) => s.type === "opinion")
+    .slice(0, 2)
+    .map((s) => ({ id: s.id, text: s.text.length > QUOTE_MAX ? s.text.slice(0, QUOTE_MAX).trimEnd() + "…" : s.text }));
   const framingTerms = [...new Set(article.framingTerms.map((f) => f.term))];
   const quotedPeople = [
     ...new Map(
@@ -107,13 +113,26 @@ export default async function ArticlePage({ params }) {
       )}
 
       {/* 평가가 담긴 표현과 인용한 사람 (기사 문장은 보여 주지 않음) */}
-      {(framingTerms.length > 0 || quotedPeople.length > 0) && (
+      {(opinionQuotes.length > 0 || framingTerms.length > 0 || quotedPeople.length > 0) && (
         <Card>
           <CardHeader>
             <CardTitle>이 기사에서 찾은 것</CardTitle>
-            <CardDescription>기사 문장은 원문에서 확인할 수 있습니다.</CardDescription>
+            <CardDescription>기사 전체 문장은 원문에서 확인할 수 있습니다.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
+            {opinionQuotes.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">
+                  의견 문장 <span className="font-normal text-muted-foreground">(일부 인용)</span>
+                </span>
+                {opinionQuotes.map((q) => (
+                  <blockquote key={q.id} className="border-l-4 pl-3 text-sm leading-relaxed">
+                    &ldquo;{q.text}&rdquo;
+                    <span className="ml-1 text-xs text-muted-foreground">— {outlet?.name}</span>
+                  </blockquote>
+                ))}
+              </div>
+            )}
             {framingTerms.length > 0 && (
               <div className="flex flex-col gap-2">
                 <span className="text-sm font-medium">평가가 담긴 표현</span>
