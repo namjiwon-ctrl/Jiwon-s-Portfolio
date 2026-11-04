@@ -1,14 +1,23 @@
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SourceLegend } from "@/components/news/source-share-bar";
-import { BarOnlyLegend, ShareChart } from "@/components/news/share-chart";
+import { BarOnlyLegend } from "@/components/news/share-chart";
 import { Intro } from "@/components/news/intro";
+import { IssueList } from "@/components/news/issue-list";
 import { averageShare, formatDate, getArticlesOfIssue, getIssues } from "@/lib/news";
 
-// 화면 1: 이슈 목록
+// 화면 1: 이슈 목록 (분야별로 골라 보기)
 export default function Home() {
-  const issues = getIssues();
+  const issues = getIssues().map((issue) => {
+    const articles = getArticlesOfIssue(issue.id);
+    return {
+      id: issue.id,
+      title: issue.title,
+      summary: issue.summary,
+      category: issue.category,
+      dateLabel: formatDate(issue.date),
+      share: averageShare(articles),
+      articleCount: articles.length,
+    };
+  });
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10">
       <Intro />
@@ -18,29 +27,7 @@ export default function Home() {
           <SourceLegend />
         </BarOnlyLegend>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        {issues.map((issue) => {
-          const articles = getArticlesOfIssue(issue.id);
-          return (
-            <Link key={issue.id} href={`/issues/${issue.id}`} className="group">
-              <Card className="h-full transition-shadow group-hover:shadow-md">
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary">{issue.category}</Badge>
-                    <span className="text-xs text-muted-foreground">{formatDate(issue.date)}</span>
-                  </div>
-                  <CardTitle className="text-lg leading-snug group-hover:underline">{issue.title}</CardTitle>
-                  <CardDescription>{issue.summary}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-3">
-                  <ShareChart share={averageShare(articles)} label="이 이슈 기사들의 평균 인용 출처" size={88} />
-                  <span className="text-xs text-muted-foreground">기사 {articles.length}건</span>
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
-      </div>
+      <IssueList issues={issues} />
     </main>
   );
 }

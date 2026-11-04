@@ -6,7 +6,71 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SourceLegend } from "@/components/news/source-share-bar";
 import { BarOnlyLegend, CompareCharts, ShareChart } from "@/components/news/share-chart";
 import { clearHistory, interestedIssueCounts, loadSampleHistory, readArticleIds, useReadingEvents } from "@/lib/reading-history";
-import { getArticle, getIssue, getOutlet, readingBias, sourceShare } from "@/lib/news";
+import { getArticle, getIssue, getOutlet, readingBias, sourceShare, sourceTypes } from "@/lib/news";
+
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+function monthDay(d) {
+  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+}
+
+// C2. 주간 내 읽기 편향 리포트: 최근 7일 기록만으로 계산
+function WeeklyReport({ events }) {
+  const now = new Date();
+  const from = new Date(now.getTime() - WEEK_MS);
+  const weekEvents = events.filter((e) => new Date(e.readAt) >= from);
+  const weekIds = readArticleIds(weekEvents);
+  const weekInterests = interestedIssueCounts(weekEvents, (id) => getArticle(id)?.issueId);
+  const { read, mine, lessHeard, recommendations } = readingBias(weekIds);
+  const top = sourceTypes.map((t) => ({ ...t, share: mine[t.id] })).sort((a, b) => b.share - a.share)[0];
+  const next = recommendations[0];
+
+  return (
+    <Card className="border-foreground/20">
+      <CardHeader>
+        <CardTitle>이번 주 리포트</CardTitle>
+        <CardDescription>
+          {monthDay(from)} ~ {monthDay(now)} · 최근 7일 기록입니다.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1 rounded-lg bg-muted/60 p-3">
+            <span className="text-xs text-muted-foreground">원문을 읽은 기사</span>
+            <span className="text-2xl font-bold tabular-nums">{read.length}건</span>
+          </div>
+          <div className="flex flex-col gap-1 rounded-lg bg-muted/60 p-3">
+            <span className="text-xs text-muted-foreground">관심 있는 주제</span>
+            <span className="text-2xl font-bold tabular-nums">{weekInterests.length}개</span>
+          </div>
+        </div>
+        {read.length === 0 ? (
+          <p className="text-sm">이번 주에는 아직 원문을 읽은 기사가 없습니다.</p>
+        ) : (
+          <ul className="list-disc space-y-1 pl-5 text-sm">
+            {top && top.share > 0 && (
+              <li>
+                이번 주에 가장 많이 접한 목소리는 <b>{top.label}</b>입니다 ({Math.round(top.share * 100)}%).
+              </li>
+            )}
+            {lessHeard.length > 0 ? (
+              <li>
+                <b>{lessHeard.map((t) => t.label).join(", ")}</b>의 목소리는 전체 평균보다 적게 접했습니다.
+              </li>
+            ) : (
+              <li>여러 목소리를 고르게 접했습니다.</li>
+            )}
+          </ul>
+        )}
+        {next && (
+          <Link href={`/articles/${next.id}`} className="group flex flex-col gap-1 rounded-lg border p-3">
+            <span className="text-xs text-muted-foreground">다음에 읽어 볼 기사 · {getOutlet(next.outletId)?.name}</span>
+            <span className="font-medium group-hover:underline">{next.title}</span>
+          </Link>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
 // "내 읽기 편향" 화면 내용 (브라우저 기록을 읽어야 해서 클라이언트에서 그림)
 export function MyBiasDashboard() {
@@ -74,10 +138,12 @@ export function MyBiasDashboard() {
         {controls}
       </div>
 
-      {/* 1. 내가 접한 인용 출처 비중 */}
+      <WeeklyReport events={events} />
+
+      {/* 1. 내가 접한 인용 출처 비중 (지금까지 전체) */}
       <Card>
         <CardHeader>
-          <CardTitle>내가 접한 인용 출처</CardTitle>
+          <CardTitle>지금까지 내가 접한 인용 출처</CardTitle>
           <CardDescription>읽은 기사에서 누구의 말을 많이 접했는지 사이트 전체 기사 평균과 비교합니다.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
