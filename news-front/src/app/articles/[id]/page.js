@@ -10,14 +10,18 @@ import {
   formatDate,
   getArticle,
   getIssue,
+  getArticlesOfIssue,
   getOutlet,
   opinionRatio,
+  averageSlope,
+  quoteSlope,
   sourceColor,
   sourceLabel,
 } from "@/lib/news";
 import data from "@/data/mock-news.json";
 import { RecordRead } from "@/components/news/record-read";
 import { OriginalLink } from "@/components/news/original-link";
+import { QuoteSlope } from "@/components/news/quote-slope";
 
 export function generateStaticParams() {
   return data.articles.map((a) => ({ id: a.id }));
@@ -81,6 +85,10 @@ export default async function ArticlePage({ params }) {
               ))}
             </ul>
           )}
+          <QuoteSlope
+            value={quoteSlope(article)}
+            compare={averageSlope(getArticlesOfIssue(article.issueId).filter((a) => a.id !== article.id))}
+          />
           <span className="text-sm text-muted-foreground">의견 문장 비율 {Math.round(opinionRatio(article) * 100)}%</span>
         </CardContent>
       </Card>

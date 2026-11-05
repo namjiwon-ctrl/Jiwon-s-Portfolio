@@ -69,6 +69,23 @@ export function opinionRatio(article) {
   return article.sentences.filter((s) => s.type === "opinion").length / article.sentences.length;
 }
 
+// 인용 기울기 (하위 지표): (정부·여당 인용 − 야당 인용) ÷ (둘의 합) → −1 ~ +1
+//   +1: 정부·여당 인용만 있음 / −1: 야당 인용만 있음 / 0: 둘이 같음
+//   정부·여당과 야당 인용이 모두 없는 기사(기업 실적 등)는 null → 화면에 점수 없이 다른 하위 지표만
+export function quoteSlope(article) {
+  const gov = article.sentences.filter((s) => s.sourceType === "gov").length;
+  const opp = article.sentences.filter((s) => s.sourceType === "opp").length;
+  if (gov + opp === 0) return null;
+  return (gov - opp) / (gov + opp);
+}
+
+// 여러 기사의 인용 기울기 평균 (점수가 없는 기사는 빼고 계산, 모두 없으면 null)
+export function averageSlope(articles) {
+  const values = articles.map(quoteSlope).filter((v) => v !== null);
+  if (values.length === 0) return null;
+  return values.reduce((a, b) => a + b, 0) / values.length;
+}
+
 // 이슈 평균과 비교했을 때 차이가 큰 출처 유형 설명 (판정하지 않고 비교만)
 export function compareWithIssue(article) {
   const others = getArticlesOfIssue(article.issueId).filter((a) => a.id !== article.id);

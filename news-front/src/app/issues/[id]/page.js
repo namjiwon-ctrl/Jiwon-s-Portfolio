@@ -4,8 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SourceLegend } from "@/components/news/source-share-bar";
 import { BarOnlyLegend, ShareChart } from "@/components/news/share-chart";
+import { QuoteSlope } from "@/components/news/quote-slope";
 import {
   averageShare,
+  averageSlope,
+  quoteSlope,
   formatDate,
   getArticlesOfIssue,
   getIssue,
@@ -48,6 +51,7 @@ export default async function IssuePage({ params }) {
           <BarOnlyLegend>
             <SourceLegend share={averageShare(articles)} />
           </BarOnlyLegend>
+          <QuoteSlope value={averageSlope(articles)} label={`기사 ${articles.length}건의 평균 인용 기울기`} />
         </CardContent>
       </Card>
 
@@ -62,6 +66,7 @@ export default async function IssuePage({ params }) {
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 <ShareChart share={sourceShare(article)} label="인용 출처" size={80} />
+                <QuoteSlope value={quoteSlope(article)} compare={averageSlope(articles)} compact />
                 <span className="text-xs text-muted-foreground">
                   의견 문장 {Math.round(opinionRatio(article) * 100)}%
                 </span>
