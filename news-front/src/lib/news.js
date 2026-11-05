@@ -15,18 +15,22 @@ export function sourceLabel(sourceTypeId) {
   return sourceTypes.find((t) => t.id === sourceTypeId)?.label ?? "기타";
 }
 
-// 그래프에 그릴 조각: 비중이 큰 상위 4개만 그 유형으로, 나머지는 '기타'로 묶음
+// 그래프에 그릴 조각: 전체 인용의 10% 이상인 유형 중 비중이 큰 최대 4개만 그 유형으로, 나머지는 '기타'로 묶음
 // 반환: [{ id, label, color, value }] — 순서는 출처 유형 순서 그대로, 기타는 맨 뒤
-export const TOP_N = 4;
-export function chartEntries(share, n = TOP_N) {
+// ▶ 기준을 바꿀 때는 아래 두 숫자만 고치면 됩니다.
+export const MIN_SHARE = 0.1; // 따로 보여 줄 최소 비중 (10%)
+export const TOP_N = 4; // 따로 보여 줄 최대 개수
+export function chartEntries(share, n = TOP_N, minShare = MIN_SHARE) {
   const ranked = sourceTypes
     .map((t, order) => ({ id: t.id, label: t.label, color: sourceColor(t.id), value: share[t.id] ?? 0, order }))
     .filter((e) => e.value > 0)
     .sort((a, b) => b.value - a.value || a.order - b.order);
-  const top = ranked.slice(0, n).sort((a, b) => a.order - b.order);
-  const rest = ranked.slice(n).reduce((sum, e) => sum + e.value, 0);
-  if (rest > 0) top.push({ id: "other", label: "기타", color: OTHER_COLOR, value: rest, order: Infinity });
-  return top;
+  const shown = ranked.filter((e) => e.value >= minShare - 1e-9).slice(0, n);
+  const shownIds = new Set(shown.map((e) => e.id));
+  const rest = ranked.filter((e) => !shownIds.has(e.id)).reduce((sum, e) => sum + e.value, 0);
+  const result = shown.sort((a, b) => a.order - b.order);
+  if (rest > 0) result.push({ id: "other", label: "기타", color: OTHER_COLOR, value: rest, order: Infinity });
+  return result;
 }
 
 export function getOutlet(outletId) {
