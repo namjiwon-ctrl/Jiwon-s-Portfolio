@@ -6,21 +6,22 @@ export function DonutChart({ share, label, size = 96, showLegend = true }) {
   const stroke = size * 0.16;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
-  // 비중이 큰 상위 4개 + 기타
+  // 출처 유형 5개 모두 (범례에는 0%도 표시, 원에는 0보다 큰 것만)
   const entries = chartEntries(share);
-  const total = entries.length;
+  const drawn = entries.filter((e) => e.value > 0);
+  const total = drawn.length;
 
   // 각 조각의 시작 위치를 차례로 쌓아 계산
   let offset = 0;
-  const slices = entries.map((e) => {
+  const slices = drawn.map((e) => {
     const length = e.value * circumference;
     const slice = { ...e, length, offset };
     offset += length;
     return slice;
   });
 
-  // 가운데에는 가장 많이 인용된 출처를 보여 줌 (기타 제외)
-  const top = entries.filter((e) => e.id !== "other").reduce((best, e) => (!best || e.value > best.value ? e : best), null);
+  // 가운데에는 가장 많이 인용된 출처를 보여 줌
+  const top = drawn.reduce((best, e) => (!best || e.value > best.value ? e : best), null);
 
   return (
     <div className="flex flex-col gap-2">

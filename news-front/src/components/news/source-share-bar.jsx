@@ -1,10 +1,9 @@
-import { chartEntries, OTHER_COLOR, sourceColor, sourceTypes } from "@/lib/news";
+import { chartEntries, sourceColor, sourceTypes } from "@/lib/news";
 
 // 인용 출처 비중을 가로 막대 하나로 보여 주는 부품
 // share: { gov: 0.6, opp: 0.2, ... } 형태 (합이 1 또는 0)
-// 비중이 큰 상위 4개만 그 유형 색으로, 나머지는 '기타'(연회색)로 묶어 그림
 export function SourceShareBar({ share, label, showLegend = false, height = "h-3" }) {
-  const entries = chartEntries(share);
+  const entries = chartEntries(share).filter((e) => e.value > 0);
   return (
     <div className="flex flex-col gap-1.5">
       {label && <span className="text-xs text-muted-foreground">{label}</span>}
@@ -19,11 +18,9 @@ export function SourceShareBar({ share, label, showLegend = false, height = "h-3
   );
 }
 
-// 범례. share를 주면 그 그래프에 그려진 항목(상위 4개 + 기타)과 비율만, 안 주면 색 안내로 전체 유형 + 기타
+// 범례: 출처 유형 5개 모두. share를 주면 비율도 함께
 export function SourceLegend({ share }) {
-  const items = share
-    ? chartEntries(share)
-    : [...sourceTypes.map((t) => ({ id: t.id, label: t.label, color: sourceColor(t.id) })), { id: "other", label: "기타", color: OTHER_COLOR }];
+  const items = share ? chartEntries(share) : sourceTypes.map((t) => ({ id: t.id, label: t.label, color: sourceColor(t.id) }));
   return (
     <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
       {items.map((t) => (
