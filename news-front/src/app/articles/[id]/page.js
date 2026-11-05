@@ -15,6 +15,9 @@ import {
   opinionRatio,
   averageSlope,
   quoteSlope,
+  averageDiversity,
+  voiceDiversity,
+  quoteCount,
   sourceColor,
   sourceLabel,
 } from "@/lib/news";
@@ -22,6 +25,7 @@ import data from "@/data/mock-news.json";
 import { RecordRead } from "@/components/news/record-read";
 import { OriginalLink } from "@/components/news/original-link";
 import { QuoteSlope } from "@/components/news/quote-slope";
+import { VoiceDiversity } from "@/components/news/voice-diversity";
 
 export function generateStaticParams() {
   return data.articles.map((a) => ({ id: a.id }));
@@ -85,6 +89,11 @@ export default async function ArticlePage({ params }) {
               ))}
             </ul>
           )}
+          <VoiceDiversity
+            value={voiceDiversity(article)}
+            count={quoteCount(article)}
+            compare={averageDiversity(getArticlesOfIssue(article.issueId).filter((a) => a.id !== article.id))}
+          />
           <QuoteSlope
             value={quoteSlope(article)}
             compare={averageSlope(getArticlesOfIssue(article.issueId).filter((a) => a.id !== article.id))}

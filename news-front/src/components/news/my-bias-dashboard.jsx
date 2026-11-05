@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SourceLegend } from "@/components/news/source-share-bar";
 import { BarOnlyLegend, CompareCharts, ShareChart } from "@/components/news/share-chart";
 import { clearHistory, interestedIssueCounts, loadSampleHistory, readArticleIds, useReadingEvents } from "@/lib/reading-history";
-import { getArticle, getIssue, getOutlet, readingBias, sourceShare, sourceTypes } from "@/lib/news";
+import { diversityOfShare, getArticle, getIssue, getOutlet, readingBias, sourceShare, sourceTypes } from "@/lib/news";
+import { VoiceDiversity } from "@/components/news/voice-diversity";
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 function monthDay(d) {
@@ -20,7 +21,7 @@ function WeeklyReport({ events }) {
   const weekEvents = events.filter((e) => new Date(e.readAt) >= from);
   const weekIds = readArticleIds(weekEvents);
   const weekInterests = interestedIssueCounts(weekEvents, (id) => getArticle(id)?.issueId);
-  const { read, mine, lessHeard, recommendations } = readingBias(weekIds);
+  const { read, mine, all, lessHeard, recommendations } = readingBias(weekIds);
   const top = sourceTypes.map((t) => ({ ...t, share: mine[t.id] })).sort((a, b) => b.share - a.share)[0];
   const next = recommendations[0];
 
@@ -43,6 +44,9 @@ function WeeklyReport({ events }) {
             <span className="text-2xl font-bold tabular-nums">{weekInterests.length}개</span>
           </div>
         </div>
+        {read.length > 0 && (
+          <VoiceDiversity value={diversityOfShare(mine)} compare={diversityOfShare(all)} label="이번 주 내가 접한 목소리 다양성" compareLabel="사이트 전체 기사" />
+        )}
         {read.length === 0 ? (
           <p className="text-sm">이번 주에는 아직 원문을 읽은 기사가 없습니다.</p>
         ) : (
@@ -148,6 +152,7 @@ export function MyBiasDashboard() {
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <CompareCharts mine={mine} avg={all} mineLabel="내가 읽은 기사" avgLabel="사이트 전체 기사 평균" />
+          <VoiceDiversity value={diversityOfShare(mine)} compare={diversityOfShare(all)} label="내가 접한 목소리 다양성" compareLabel="사이트 전체 기사" />
           <BarOnlyLegend>
             <SourceLegend />
           </BarOnlyLegend>

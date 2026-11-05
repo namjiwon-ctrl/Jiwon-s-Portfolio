@@ -5,10 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SourceLegend } from "@/components/news/source-share-bar";
 import { BarOnlyLegend, ShareChart } from "@/components/news/share-chart";
 import { QuoteSlope } from "@/components/news/quote-slope";
+import { VoiceDiversity } from "@/components/news/voice-diversity";
 import {
   averageShare,
   averageSlope,
   quoteSlope,
+  averageDiversity,
+  voiceDiversity,
+  quoteCount,
   formatDate,
   getArticlesOfIssue,
   getIssue,
@@ -51,6 +55,7 @@ export default async function IssuePage({ params }) {
           <BarOnlyLegend>
             <SourceLegend share={averageShare(articles)} />
           </BarOnlyLegend>
+          <VoiceDiversity value={averageDiversity(articles)} label={`기사 ${articles.length}건의 평균 목소리 다양성`} />
           <QuoteSlope value={averageSlope(articles)} label={`기사 ${articles.length}건의 평균 인용 기울기`} />
         </CardContent>
       </Card>
@@ -66,6 +71,7 @@ export default async function IssuePage({ params }) {
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 <ShareChart share={sourceShare(article)} label="인용 출처" size={80} />
+                <VoiceDiversity value={voiceDiversity(article)} count={quoteCount(article)} compare={averageDiversity(articles)} compact />
                 <QuoteSlope value={quoteSlope(article)} compare={averageSlope(articles)} compact />
                 <span className="text-xs text-muted-foreground">
                   의견 문장 {Math.round(opinionRatio(article) * 100)}%

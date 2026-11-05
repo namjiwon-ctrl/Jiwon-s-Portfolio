@@ -86,6 +86,31 @@ export function averageSlope(articles) {
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
+// 목소리 다양성 (하위 지표): 5개 출처 유형이 얼마나 고르게 인용됐는지 0 ~ 1
+//   정규화한 엔트로피 = (−Σ p × ln p) ÷ ln(유형 수)
+//   0: 한 유형만 인용 / 1: 모든 유형을 똑같이 인용 / 인용이 하나도 없으면 null
+export function diversityOfShare(share) {
+  const values = sourceTypes.map((t) => share[t.id] ?? 0).filter((p) => p > 0);
+  if (values.length === 0) return null;
+  const h = -values.reduce((sum, p) => sum + p * Math.log(p), 0);
+  return Math.max(0, h / Math.log(sourceTypes.length));
+}
+
+export function quoteCount(article) {
+  return article.sentences.filter((s) => s.sourceType).length;
+}
+
+export function voiceDiversity(article) {
+  return diversityOfShare(sourceShare(article));
+}
+
+// 여러 기사의 다양성 평균 (인용이 없는 기사는 빼고, 모두 없으면 null)
+export function averageDiversity(articles) {
+  const values = articles.map(voiceDiversity).filter((v) => v !== null);
+  if (values.length === 0) return null;
+  return values.reduce((a, b) => a + b, 0) / values.length;
+}
+
 // 이슈 평균과 비교했을 때 차이가 큰 출처 유형 설명 (판정하지 않고 비교만)
 export function compareWithIssue(article) {
   const others = getArticlesOfIssue(article.issueId).filter((a) => a.id !== article.id);
