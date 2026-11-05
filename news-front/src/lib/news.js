@@ -5,13 +5,28 @@ import data from "@/data/mock-news.json";
 export const sourceTypes = data.sourceTypes;
 
 // 출처 유형별 색. 정치적 색 연상(빨강·파랑)을 피하려고 중립적인 색만 씁니다.
-const PALETTE = ["#0f766e", "#b45309", "#6d28d9", "#475569", "#be185d", "#4d7c0f"];
+const PALETTE = ["#0f766e", "#b45309", "#6d28d9", "#475569", "#4d7c0f", "#92400e"];
+export const OTHER_COLOR = "#cbd5e1"; // 기타
 export function sourceColor(sourceTypeId) {
   const index = sourceTypes.findIndex((t) => t.id === sourceTypeId);
   return PALETTE[index % PALETTE.length] ?? "#94a3b8";
 }
 export function sourceLabel(sourceTypeId) {
   return sourceTypes.find((t) => t.id === sourceTypeId)?.label ?? "기타";
+}
+
+// 그래프에 그릴 조각: 비중이 큰 상위 4개만 그 유형으로, 나머지는 '기타'로 묶음
+// 반환: [{ id, label, color, value }] — 순서는 출처 유형 순서 그대로, 기타는 맨 뒤
+export const TOP_N = 4;
+export function chartEntries(share, n = TOP_N) {
+  const ranked = sourceTypes
+    .map((t, order) => ({ id: t.id, label: t.label, color: sourceColor(t.id), value: share[t.id] ?? 0, order }))
+    .filter((e) => e.value > 0)
+    .sort((a, b) => b.value - a.value || a.order - b.order);
+  const top = ranked.slice(0, n).sort((a, b) => a.order - b.order);
+  const rest = ranked.slice(n).reduce((sum, e) => sum + e.value, 0);
+  if (rest > 0) top.push({ id: "other", label: "기타", color: OTHER_COLOR, value: rest, order: Infinity });
+  return top;
 }
 
 export function getOutlet(outletId) {
